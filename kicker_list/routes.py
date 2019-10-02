@@ -1,24 +1,16 @@
-from flask import Flask, escape, request, render_template, url_for, flash, redirect
-from forms import RegistrationForm, LoginForm
-from get_data import get_data
-import json, plotly
-
-app = Flask(__name__)
-
-app.config['SECRET_KEY'] = '0798aaa973a4f300d8a2277a9db963f2'
-
-passed_data = get_data()
-
+from flask import escape, request, render_template, url_for, flash, redirect
+from kicker_list import app
+from kicker_list.forms import RegistrationForm, LoginForm
+from kicker_list.db_models import User, Post
 
 @app.route('/')
 @app.route('/home')
 def home():
-    name = request.args.get("name", "World")
-    return render_template('home.html', data = passed_data)
+    return render_template('home.html')
 
 @app.route('/about')
 def about():
-    return render_template('about.html', data = passed_data)
+    return render_template('about.html')
 
 
 @app.route('/register', methods = ['GET', 'POST'])
@@ -39,6 +31,3 @@ def login():
         else:
             flash('Login Unsuccessfull. Please check username and password.', 'danger')
     return render_template('login.html', title = 'Login', form = form)
-
-if __name__ == '__main__':
-    app.run(debug = True)
