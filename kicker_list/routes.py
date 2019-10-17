@@ -3,7 +3,7 @@ import os
 from PIL import Image
 from flask import escape, request, render_template, url_for, flash, redirect
 from kicker_list import app, db, bcrypt
-from kicker_list.forms import RegistrationForm, LoginForm, UpdateAccountForm
+from kicker_list.forms import RegistrationForm, LoginForm, UpdateAccountForm, GameResultForm
 from kicker_list.db_models import User, Post
 from flask_login import login_user, current_user, logout_user, login_required
 
@@ -81,3 +81,14 @@ def account():
         form.email.data = current_user.email
     image_file = url_for('static', filename = 'profile_pictures/' + current_user.image_file)
     return render_template('account.html', profile_picture = image_file, form = form)
+
+@app.route('/newMatch', methods = ['GET', 'POST'])
+@login_required
+def newMatch():
+    form = GameResultForm()
+    if form.validate_on_submit():
+        flash('Match has been added to the database.', 'success')
+        return redirect(url_for('home'))
+    return render_template('enterMatch.html', form = form)
+    
+    
